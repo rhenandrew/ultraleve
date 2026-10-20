@@ -33,10 +33,11 @@ function positionFlight(progress) {
   if (!toolbar || !logo) return;
   const bar = toolbar.getBoundingClientRect();
   const brand = logo.getBoundingClientRect();
-  const start = Math.min(brand.right - bar.left + 12, bar.width - indicator.offsetWidth - 12);
+  const start = bar.width <= 700 ? 8 : Math.min(brand.right - bar.left + 12, bar.width - indicator.offsetWidth - 12);
   const end = Math.max(start, bar.width - indicator.offsetWidth - 12);
   indicator.style.setProperty('--flight-x', `${start + (end - start) * flightProgress}px`);
-  const centerY = bar.height * flightHeight(flightProgress);
+  const routeHeight = bar.width <= 700 ? .60 + .34 * Math.sin(Math.PI * flightProgress) - .27 * flightProgress : flightHeight(flightProgress);
+  const centerY = bar.height * routeHeight;
   indicator.style.setProperty('--flight-y', `${Math.max(0, centerY - indicator.offsetHeight / 2)}px`);
 }
 function updateFlight() {

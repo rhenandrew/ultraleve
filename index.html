@@ -10,10 +10,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261020-biografia">
+  <link rel="stylesheet" href="styles.css?v=20261020-cabine-mobile">
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
   <script src="content-model.js" defer></script>
-  <script src="content-loader.js?v=20261013-admin" defer></script>
+  <script src="content-loader.js?v=20261020-cabine-mobile" defer></script>
 </head>
 <body>
   <header class="toolbar">
@@ -30,15 +30,17 @@
 
   <main>
     <section class="cockpit" id="cabine" aria-labelledby="band-name">
-      <img class="cockpit-image" src="assets/ultraleve.png" alt="Vista de dentro de um avião ultraleve, com estrutura tubular, asa alta e um painel compacto sobre uma paisagem de nuvens." fetchpriority="high">
       <div class="sky-copy">
         <h1 id="band-name">ULTRALEVE</h1>
         <p class="handwritten">o volume vai lá em cima.</p>
       </div>
+      <div class="cockpit-scene">
+      <img class="cockpit-image" src="assets/ultraleve.png" alt="Vista de dentro de um avião ultraleve, com estrutura tubular, asa alta e um painel compacto sobre uma paisagem de nuvens." fetchpriority="high">
       <div class="cockpit-actions">
       <button class="hotspot radio" type="button" data-open="musicas" title="Abrir músicas no rádio de bordo"><span class="object-label">RÁDIO</span><span class="object-title">MÚSICAS <i data-lucide="play" aria-hidden="true"></i></span></button>
       <button class="hotspot monitor" type="button" data-open="banda" title="Conhecer a ULTRALEVE"><span class="object-title">A BANDA</span></button>
       <button class="hotspot ticket" type="button" data-open="shows" title="Abrir agenda de shows"><span class="ticket-top">ULTRALEVE</span><span class="object-title">SHOWS</span><span class="ticket-bottom">AO VIVO <i data-lucide="arrow-up-right" aria-hidden="true"></i></span></button>
+      </div>
       </div>
       <div class="cockpit-bottom"><span>ULTRALEVE / MÚSICA INDEPENDENTE</span><button type="button" data-open="contatos">CONTATO <i data-lucide="radio" aria-hidden="true"></i></button></div>
     </section>
