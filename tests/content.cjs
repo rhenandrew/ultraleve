@@ -1,0 +1,42 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const {spawn} = require('node:child_process');
+const model = require('../content-model.js');
+assert.equal(model.videoId('https://youtu.be/WRcxE6M-ETE'),'WRcxE6M-ETE');
+assert.equal(model.videoId('https://evil.test/watch?v=WRcxE6M-ETE'),null);
+assert.equal(model.safeUrl('javascript:alert(1)'),null);
+assert.equal(model.nextMonth('2026-01-31'),'2026-02-28');
+assert.equal(model.showStatus({date:'2026-09-13'},'2026-10-13'),'Realizado');
+assert.equal(model.showStatus({date:'2026-09-13'},'2026-10-14'),'archived');
+assert.equal(model.showStatus({date:'2026-10-13'},'2026-10-13'),'Em breve');
+assert.throws(()=>model.validate({music:[{id:'a',title:'A',videoId:'bad'}],shows:[]}));
+(async()=>{
+  const folder=fs.mkdtempSync(path.join(os.tmpdir(),'ultraleve-test-'));
+  const file=path.join(folder,'content.json');
+  const original=fs.readFileSync(path.join(__dirname,'../content.json'),'utf8');fs.writeFileSync(file,original);
+  const password=require('node:crypto').randomBytes(24).toString('hex');
+  const auth='Basic '+Buffer.from('banda:'+password).toString('base64');
+  const child=spawn(process.execPath,[path.join(__dirname,'../server.cjs')],{env:{...process.env,PORT:'0',ULTRA_CONTENT_FILE:file,ULTRA_ADMIN_PASSWORD:password}});
+  const timeout=setTimeout(()=>child.kill(),10000);
+  try{
+    const url=await new Promise((resolve,reject)=>{child.stdout.once('data',d=>resolve(d.toString().trim()));child.once('error',reject);child.once('exit',()=>reject(Error('Servidor terminou.')));});
+    let r=await fetch(url+'/api/content');const etag=r.headers.get('ETag');const data=await r.json();
+    data.music.push({id:'new-song',title:'Teste',videoId:'WRcxE6M-ETE'});
+    data.shows.push({id:'new-show',date:'2026-10-30',time:'20:00',place:'Local de teste',city:'Cidade de teste',tickets:'https://example.com',cancelled:false});
+    const options={method:'PUT',headers:{Origin:url,'Content-Type':'application/json','If-Match':etag,Authorization:auth},body:JSON.stringify(data)};
+    r=await fetch(url+'/api/content',{...options,headers:{...options.headers,Authorization:''}});assert.equal(r.status,401);
+    assert.equal(fs.readFileSync(file,'utf8'),original);
+    r=await fetch(url+'/painel');assert.equal(r.status,401);
+    r=await fetch(url+'/admin.html');assert.equal(r.status,401);
+    r=await fetch(url+'/painel',{headers:{Authorization:'Basic '+Buffer.from('banda:wrong').toString('base64')}});assert.equal(r.status,401);
+    r=await fetch(url+'/api/content',options);assert.equal(r.status,200);
+    assert.equal(JSON.parse(fs.readFileSync(file,'utf8')).music.length,data.music.length);
+    r=await fetch(url+'/api/content',options);assert.equal(r.status,409);
+    r=await fetch(url+'/api/content',{...options,headers:{...options.headers,Origin:'https://evil.test'}});assert.equal(r.status,403);
+    r=await fetch(url+'/painel',{headers:{Authorization:auth}});assert.equal(r.status,200);assert.ok((await r.text()).includes('music-form'));
+    r=await fetch(url+'/');assert.ok(!(await r.text()).includes('ultraleve.band@gmail.com'));
+    console.log('PASS: protected panel and writes, invalid credentials rejected, public reads, hidden email, persistence and conflicts.');
+  }finally{clearTimeout(timeout);child.kill();await new Promise(resolve=>child.once('exit',resolve));fs.rmSync(folder,{recursive:true,force:true});}
+})().catch(e=>{console.error(e);process.exitCode=1;});

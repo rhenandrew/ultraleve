@@ -1,0 +1,12 @@
+{
+  "name": "ultraleve-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site da banda ULTRALEVE, com músicas, agenda e painel local.",
+  "engines": {"node": ">=22"},
+  "scripts": {
+    "start": "node server.cjs",
+    "test": "node tests/smoke.cjs && node tests/content.cjs",
+    "build": "node export-static.cjs"
+  }
+}

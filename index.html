@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#151719">
+  <meta name="description" content="ULTRALEVE. Músicas, shows e encontros a bordo.">
+  <title>ULTRALEVE | A bordo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20261013-route2">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script src="content-model.js" defer></script>
+  <script src="content-loader.js?v=20261013-admin" defer></script>
+</head>
+<body>
+  <header class="toolbar">
+    <a class="small-brand" href="#cabine">ULTRALEVE</a>
+    <div class="flight-indicator" id="flight-indicator" data-playing="false" role="img" aria-label="Rádio pausado"><img class="flying-plane" src="assets/ultraleve-perfil.svg" alt="Monomotor monocromático com hélice frontal"></div>
+    <nav aria-label="Navegação principal">
+      <button type="button" data-open="musicas">Músicas</button>
+      <button type="button" data-open="shows">Shows</button>
+      <button type="button" data-open="banda">A banda</button>
+      <button type="button" data-open="contatos">Contato</button>
+    </nav>
+    <div class="header-socials"><a href="https://www.instagram.com/_ultraleve_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram da ULTRALEVE" title="Instagram"><i data-lucide="instagram" aria-hidden="true"></i></a><a href="https://www.youtube.com/channel/UCmP3JAU6KlT7MEe01TlTRBA" target="_blank" rel="noopener noreferrer" aria-label="YouTube da ULTRALEVE" title="YouTube"><i data-lucide="youtube" aria-hidden="true"></i></a></div>
+  </header>
+
+  <main>
+    <section class="cockpit" id="cabine" aria-labelledby="band-name">
+      <img class="cockpit-image" src="assets/ultraleve.png" alt="Vista de dentro de um avião ultraleve, com estrutura tubular, asa alta e um painel compacto sobre uma paisagem de nuvens." fetchpriority="high">
+      <div class="sky-copy">
+        <h1 id="band-name">ULTRALEVE</h1>
+        <p class="handwritten">o volume vai lá em cima.</p>
+      </div>
+      <div class="cockpit-actions">
+      <button class="hotspot radio" type="button" data-open="musicas" title="Abrir músicas no rádio de bordo"><span class="object-label">RÁDIO</span><span class="object-title">MÚSICAS <i data-lucide="play" aria-hidden="true"></i></span></button>
+      <button class="hotspot monitor" type="button" data-open="banda" title="Conhecer a ULTRALEVE"><span class="object-title">A BANDA</span></button>
+      <button class="hotspot ticket" type="button" data-open="shows" title="Abrir agenda de shows"><span class="ticket-top">ULTRALEVE</span><span class="object-title">SHOWS</span><span class="ticket-bottom">AO VIVO <i data-lucide="arrow-up-right" aria-hidden="true"></i></span></button>
+      </div>
+      <div class="cockpit-bottom"><span>ULTRALEVE / MÚSICA INDEPENDENTE</span><button type="button" data-open="contatos">CONTATO <i data-lucide="radio" aria-hidden="true"></i></button></div>
+    </section>
+
+    <section class="flight-deck" id="sons" aria-label="Canais e músicas">
+      <div class="deck-heading"><span class="deck-kicker">DIRETO DA CABINE</span><h2>O som continua.</h2></div>
+      <div class="video-grid">
+        <article><button class="video-cover" type="button" data-video="negativo" aria-label="Reproduzir Negativo no YouTube"><img src="https://i.ytimg.com/vi/WRcxE6M-ETE/hqdefault.jpg" alt="Negativo, ULTRALEVE" loading="lazy"><i data-lucide="play" aria-hidden="true"></i></button><h3>01 / Negativo</h3><a href="https://www.youtube.com/watch?v=WRcxE6M-ETE" target="_blank" rel="noopener noreferrer">YouTube ↗</a></article>
+        <article><button class="video-cover" type="button" data-video="recomecar" aria-label="Reproduzir Recomeçar no YouTube"><img src="https://i.ytimg.com/vi/A1Lon87KK-c/hqdefault.jpg" alt="Recomeçar, ULTRALEVE" loading="lazy"><i data-lucide="play" aria-hidden="true"></i></button><h3>02 / Recomeçar</h3><a href="https://www.youtube.com/watch?v=A1Lon87KK-c" target="_blank" rel="noopener noreferrer">YouTube ↗</a></article>
+        <article><button class="video-cover" type="button" data-video="in-loop" aria-label="Reproduzir In Loop no YouTube"><img src="https://i.ytimg.com/vi/bsZ7K7QEsMM/hqdefault.jpg" alt="In Loop, ULTRALEVE" loading="lazy"><i data-lucide="play" aria-hidden="true"></i></button><h3>03 / In Loop</h3><a href="https://www.youtube.com/watch?v=bsZ7K7QEsMM" target="_blank" rel="noopener noreferrer">YouTube ↗</a></article>
+      </div>
+      <p id="playback-status" role="status"></p><a class="text-link" href="https://audiomack.com/ultraleve" target="_blank" rel="noopener noreferrer">OUVIR NO AUDIOMACK ↗</a>
+    </section>
+    <section class="shows-section" id="agenda" aria-labelledby="agenda-title"><p class="deck-kicker">AO VIVO</p><h2 id="agenda-title">Próximos shows</h2><div id="show-list"><p>Nenhuma data anunciada por aqui ainda.</p></div></section>
+    <section class="contact-section" id="fale-com-a-banda" aria-labelledby="contact-heading"><p class="deck-kicker">CÂMBIO, ULTRALEVE</p><h2 id="contact-heading">Vamos fazer barulho.</h2><div class="contact-columns"><div><h3>Shows &amp; parcerias</h3><a class="contact-handle" href="https://www.instagram.com/_ultraleve_/" target="_blank" rel="noopener noreferrer">@_ultraleve_ ↗</a></div><div><h3>Encontre a banda</h3><a href="https://www.youtube.com/channel/UCmP3JAU6KlT7MEe01TlTRBA" target="_blank" rel="noopener noreferrer">YouTube ↗</a><a href="https://www.instagram.com/_ultraleve_/" target="_blank" rel="noopener noreferrer">Instagram ↗</a></div></div></section>
+  </main>
+  <footer><span>ULTRALEVE</span><a href="https://www.instagram.com/_ultraleve_/" target="_blank" rel="noopener noreferrer">INSTAGRAM <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><span>© 2026</span></footer>
+
+  <dialog id="musicas" class="retro-window" aria-labelledby="music-title">
+    <div class="window-bar"><span>ULTRALEVE / RÁDIO DE BORDO</span><button type="button" data-close aria-label="Fechar músicas" title="Fechar"><i data-lucide="x" aria-hidden="true"></i></button></div>
+    <div class="window-content"><p class="channel">FREQUÊNCIA UL001</p><h2 id="music-title">Escolha o som.</h2>
+      <div class="playlist"><button type="button" data-track="negativo" aria-pressed="false"><span>01</span><strong>Negativo</strong><i data-lucide="play" aria-hidden="true"></i></button><button type="button" data-track="recomecar" aria-pressed="false"><span>02</span><strong>Recomeçar</strong><i data-lucide="play" aria-hidden="true"></i></button><button type="button" data-track="in-loop" aria-pressed="false"><span>03</span><strong>In Loop</strong><i data-lucide="play" aria-hidden="true"></i></button></div>
+      <p>Negativo / Recomeçar / In Loop</p>
+    </div>
+  </dialog>
+
+  <dialog id="shows" class="retro-window" aria-labelledby="shows-title">
+    <div class="window-bar"><span>ULTRALEVE / CARTÃO DE EMBARQUE</span><button type="button" data-close aria-label="Fechar shows" title="Fechar"><i data-lucide="x" aria-hidden="true"></i></button></div>
+    <div class="window-content"><p class="channel">DESTINO: NA FRENTE DO PALCO</p><h2 id="shows-title">Próximos shows</h2><p>A próxima data ainda não foi confirmada nesta página. Acompanhe as apresentações no Instagram da banda.</p><a class="text-link" href="https://www.instagram.com/_ultraleve_/" target="_blank" rel="noopener noreferrer">ACOMPANHAR A AGENDA <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></div>
+  </dialog>
+
+  <dialog id="banda" class="retro-window" aria-labelledby="about-title">
+    <div class="window-bar"><span>ULTRALEVE / TRIPULAÇÃO</span><button type="button" data-close aria-label="Fechar apresentação da banda" title="Fechar"><i data-lucide="x" aria-hidden="true"></i></button></div>
+    <div class="window-content"><p class="channel">CONEXÃO ESTABELECIDA</p><h2 id="about-title">ULTRALEVE</h2><p>Negativo. Recomeçar. In Loop.</p><p>Entre nas músicas e acompanhe os próximos encontros pelos canais da banda.</p><button class="text-link" type="button" data-open="musicas">OUVIR A ULTRALEVE <i data-lucide="arrow-right" aria-hidden="true"></i></button></div>
+  </dialog>
+
+  <dialog id="contatos" class="retro-window" aria-labelledby="contact-title">
+    <div class="window-bar"><span>ULTRALEVE / COMUNICAÇÃO</span><button type="button" data-close aria-label="Fechar contatos" title="Fechar"><i data-lucide="x" aria-hidden="true"></i></button></div>
+    <div class="window-content"><p class="channel">CÂMBIO, ULTRALEVE</p><h2 id="contact-title">Estamos por aqui.</h2><div class="contact-list"><a href="https://www.instagram.com/_ultraleve_/" target="_blank" rel="noopener noreferrer"><span>Instagram</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="https://www.youtube.com/channel/UCmP3JAU6KlT7MEe01TlTRBA" target="_blank" rel="noopener noreferrer"><span>YouTube</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="https://www.tiktok.com/@ultraleve.band" target="_blank" rel="noopener noreferrer"><span>TikTok</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="https://linktr.ee/ultraleve42" target="_blank" rel="noopener noreferrer"><span>Música e demais canais</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a></div></div>
+  </dialog>
+</body>
+</html>
