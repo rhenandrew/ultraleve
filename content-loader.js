@@ -38,5 +38,5 @@
   } catch {
     if (location.protocol !== 'file:') document.getElementById('playback-status').textContent = 'Não foi possível atualizar as músicas. Recarregue a página.';
   }
-  const script = document.createElement('script'); script.src = 'script.js?v=20261020-cabine-mobile'; document.head.append(script);
+  const script = document.createElement('script'); script.src = 'script.js?v=20261020-voo-livre'; document.head.append(script);
 })();

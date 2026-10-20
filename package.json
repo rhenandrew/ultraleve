@@ -6,7 +6,7 @@
   "engines": {"node": ">=22"},
   "scripts": {
     "start": "node server.cjs",
-    "test": "node tests/smoke.cjs && node tests/content.cjs",
+    "test": "node tests/smoke.cjs && node tests/content.cjs && node tests/flight.cjs",
     "build": "node export-static.cjs"
   }
 }

@@ -4,6 +4,7 @@ let player, activeButton, pendingTrack, apiRequested = false;
 let playbackGeneration = 0;
 let flightTimer = null;
 let flightProgress = 0;
+let flightStarted = false;
 const status = document.getElementById('playback-status');
 const indicator = document.getElementById('flight-indicator');
 function setPlaying(value) {
@@ -12,6 +13,7 @@ function setPlaying(value) {
   indicator.dataset.playing = String(value);
   indicator.setAttribute('aria-label', value ? 'Rádio tocando' : 'Rádio pausado');
   if (value) {
+    flightStarted = true;
     updateFlight();
     flightTimer = setInterval(updateFlight, 250);
   }
@@ -33,11 +35,24 @@ function positionFlight(progress) {
   if (!toolbar || !logo) return;
   const bar = toolbar.getBoundingClientRect();
   const brand = logo.getBoundingClientRect();
-  const start = bar.width <= 700 ? 8 : Math.min(brand.right - bar.left + 12, bar.width - indicator.offsetWidth - 12);
+  const parked = Math.min(brand.right - bar.left + 12, bar.width - indicator.offsetWidth - 12);
+  const start = bar.width <= 700 ? 8 : parked;
   const end = Math.max(start, bar.width - indicator.offsetWidth - 12);
-  indicator.style.setProperty('--flight-x', `${start + (end - start) * flightProgress}px`);
+  const x = flightStarted ? start + (end - start) * flightProgress : parked;
+  indicator.style.setProperty('--flight-x', `${x}px`);
   const routeHeight = bar.width <= 700 ? .60 + .34 * Math.sin(Math.PI * flightProgress) - .27 * flightProgress : flightHeight(flightProgress);
-  const centerY = bar.height * routeHeight;
+  let centerY = flightStarted ? bar.height * routeHeight : brand.top - bar.top + brand.height / 2;
+  if (flightStarted) {
+    // Leave room for the whole aircraft before it reaches a label or icon.
+    document.querySelectorAll('.toolbar nav button,.header-socials a').forEach(item => {
+      const rect = item.getBoundingClientRect();
+      const left = rect.left - bar.left;
+      const right = rect.right - bar.left;
+      if (x + indicator.offsetWidth + 32 > left && x - 32 < right) {
+        centerY = Math.max(centerY, rect.bottom - bar.top + indicator.offsetHeight / 2 + 8);
+      }
+    });
+  }
   indicator.style.setProperty('--flight-y', `${Math.max(0, centerY - indicator.offsetHeight / 2)}px`);
 }
 function updateFlight() {
@@ -75,6 +90,7 @@ function chooseTrack(id) {
     return;
   }
   setPlaying(false);
+  flightStarted = false;
   positionFlight(0);
   const generation = ++playbackGeneration;
   if (player) player.destroy();
