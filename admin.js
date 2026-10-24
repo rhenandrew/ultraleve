@@ -6,7 +6,7 @@ function editing(form,item) {form.reset();Object.entries(item).forEach(([key,val
 async function save(next) {
   if(saving)return false;
   saving=true;document.querySelectorAll('button').forEach(b=>b.disabled=true);status.textContent='Salvando…';
-  try { const r=await fetch(new URL('api/content',document.baseURI),{method:'PUT',headers:{'Content-Type':'application/json','If-Match':etag},body:JSON.stringify(BandModel.validate(next))});const result=await r.json();if(!r.ok)throw Error(result.error || 'Falha ao salvar.');content=result;etag=r.headers.get('ETag');render();status.textContent='Salvo. Atualize a página pública para ver as alterações.';return true; }
+  try { const r=await fetch(new URL('api/content',document.baseURI),{method:'PUT',headers:{'Content-Type':'application/json','If-Match':etag},body:JSON.stringify(BandModel.validate(next))});const result=await r.json();if(!r.ok)throw Error(result.error || 'Falha ao salvar.');content=result;etag=r.headers.get('ETag');render();status.textContent='Salvo. O site atualiza automaticamente em até 10 segundos.';return true; }
   catch(e){status.textContent=e.message;return false;}finally{saving=false;document.querySelectorAll('button').forEach(b=>b.disabled=false);}
 }
 function render() {

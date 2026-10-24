@@ -127,7 +127,16 @@ function chooseTrack(id) {
   });
 }
 window.onYouTubeIframeAPIReady = () => { if (pendingTrack) chooseTrack(pendingTrack); };
-document.querySelectorAll('[data-video]').forEach(b => b.addEventListener('click', () => chooseTrack(b.dataset.video)));
+document.querySelector('.video-grid')?.addEventListener('click', e => {
+  const button=e.target.closest('[data-video]');if(button)chooseTrack(button.dataset.video);
+});
+window.addEventListener('band-content-updated',()=>{
+  const next=Object.fromEntries(window.bandContent.music.map(item=>[item.id,item.videoId]));
+  if(activeButton&&(!activeButton.isConnected||next[activeButton.dataset.video]!==tracks[activeButton.dataset.video])){
+    playbackGeneration++;player?.destroy();player=null;setPlaying(false);flightStarted=false;positionFlight(0);activeButton=null;pendingTrack=null;
+  }
+  Object.keys(tracks).forEach(id=>delete tracks[id]);Object.assign(tracks,next);
+});
 document.querySelectorAll('[data-track]').forEach(b => b.addEventListener('click', () => {openPanel('musicas'); chooseTrack(b.dataset.track);}));
 if (window.lucide) window.lucide.createIcons();
 const cockpit = document.getElementById('cabine');

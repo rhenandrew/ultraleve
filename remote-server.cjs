@@ -19,6 +19,7 @@ if(!fs.existsSync(contentFile))atomic(contentFile,model.validate(JSON.parse(fs.r
 let account=JSON.parse(fs.readFileSync(stateFile,'utf8'));
 const sessions=new Map(),attempts=new Map();
 const etag=s=>'"'+crypto.createHash('sha256').update(s).digest('hex')+'"';
+const contentVersion=value=>typeof value==='string'?value.replace(/^W\//,''):value;
 const same=(a,b)=>typeof a==='string'&&typeof b==='string'&&a.length===b.length&&crypto.timingSafeEqual(Buffer.from(a),Buffer.from(b));
 function cookie(req,name){return (req.headers.cookie||'').split(';').map(x=>x.trim()).find(x=>x.startsWith(name+'='))?.slice(name.length+1);}
 function cookies(res,values){res.setHeader('Set-Cookie',values.map(v=>v+`; Path=${prefix}; HttpOnly; SameSite=Strict`+(process.env.ULTRA_SECURE_COOKIE==='0'?'':'; Secure')));}
@@ -67,7 +68,7 @@ const server=http.createServer(async(req,res)=>{
     }
     if(req.method!=='PUT'){send(res,405,{error:'Metodo nao permitido.'});return;}
     if(!s||s.mustChange){send(res,403,{error:'Entre e altere a senha inicial antes de editar.'});return;}
-    try{const data=model.validate(await body(req,250000)),previous=fs.readFileSync(contentFile,'utf8');if(req.headers['if-match']!==etag(previous)){send(res,409,{error:'Conteudo atualizado por outra pessoa. Recarregue o painel.'});return;}
+    try{const data=model.validate(await body(req,250000)),previous=fs.readFileSync(contentFile,'utf8');if(contentVersion(req.headers['if-match'])!==etag(previous)){send(res,409,{error:'Conteudo atualizado por outra pessoa. Recarregue o painel.'});return;}
       atomic(contentFile,data);res.setHeader('ETag',etag(fs.readFileSync(contentFile,'utf8')));send(res,200,data);
     }catch{send(res,400,{error:'Conteudo invalido.'});}return;
   }

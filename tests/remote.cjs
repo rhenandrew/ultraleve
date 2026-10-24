@@ -22,7 +22,12 @@ test('painel remoto exige convite e troca de senha antes de editar',async()=>{
     assert.equal((await post('/api/content',data,tempSession,'PUT',{'If-Match':tag})).status,403);
     assert.equal((await post('/api/content',data,active,'PUT',{'If-Match':'old'})).status,409);
     assert.equal((await post('/api/content',data,active,'PUT',{'If-Match':tag,Origin:'https://evil.invalid'})).status,403);
-    assert.equal((await post('/api/content',data,active,'PUT',{'If-Match':tag})).status,200);
+    const reordered=structuredClone(data);reordered.music.reverse();
+    const firstSave=await post('/api/content',reordered,active,'PUT',{'If-Match':'W/'+tag});
+    assert.equal(firstSave.status,200);
+    assert.deepEqual((await (await fetch(base+'/api/content')).json()).music,reordered.music);
+    assert.equal((await post('/api/content',data,active,'PUT',{'If-Match':tag})).status,409);
+    assert.equal((await post('/api/content',data,active,'PUT',{'If-Match':'W/'+firstSave.headers.get('ETag')})).status,200);
     assert.equal((await fetch(base+'/ativar?token='+state.token,{redirect:'manual'})).status,403);
     assert.equal((await fetch(base+'/account.json')).status,404);
     const saved=JSON.parse(fs.readFileSync(path.join(dir,'account.json'),'utf8'));assert.equal(saved.setup,false);assert.equal(saved.token,undefined);

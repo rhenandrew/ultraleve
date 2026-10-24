@@ -12,7 +12,7 @@ const context = vm.createContext({
   window:{addEventListener(){},YT:{Player: function(mount, options) {const p={options,destroyed:false,destroy(){this.destroyed=true;},playVideo(){},getDuration(){return 200;},getCurrentTime(){return 100;}}; instances.push(p);return p;}}},
   document:{
     getElementById:id=>elements[id],
-    querySelector:s=>s === '.toolbar' || s === '.small-brand' ? null : buttons[s.match(/"([^"]+)"/)[1]],
+    querySelector:s=>['.toolbar','.small-brand','.video-grid'].includes(s) ? null : buttons[s.match(/"([^"]+)"/)[1]],
     querySelectorAll:selector=>selector === '.track-player' ? slots.filter(slot=>!slot.removed) : [],
     createElement:()=>({append(){slots.push(this);},remove(){this.removed=true;}})
   }
