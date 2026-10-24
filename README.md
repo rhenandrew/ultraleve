@@ -14,6 +14,10 @@ No Windows também é possível executar `Abrir site.cmd`. O endereço aparece n
 
 ## Painel da banda
 
+O painel remoto esta em `https://api.stream.dev.br/ultraleve/login`, em um container isolado na Oracle. O primeiro acesso usa convite privado com validade de 24 horas e obriga definir uma nova senha de pelo menos 12 caracteres antes de editar. Contas, hashes e catalogo ficam em volume privado fora do repositorio. A senha inicial nao libera o acesso sem convite. Depois da ativacao, o convite e a senha inicial deixam de funcionar.
+
+O site publicado consulta o catalogo remoto a cada carregamento, com fallback para o arquivo local se o backend estiver indisponivel. Alteracoes pelo painel aparecem ao atualizar a pagina publica. A exportacao Pages continua excluindo servidor e painel; nao existe senha no JavaScript publico.
+
 Acesse `/painel` no servidor local. O acesso e a gravação exigem autenticação. A senha inicial é gerada fora deste repositório, na pasta privada do usuário.
 
 Músicas e shows ficam em `content.json`. Shows realizados permanecem na agenda pública por um mês calendário, depois ficam apenas no histórico do painel. Atualize a página pública para refletir uma edição recente.

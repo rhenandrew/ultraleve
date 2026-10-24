@@ -3,7 +3,8 @@
   try {
     let data;
     try {
-      const response = await fetch('/api/content', {cache:'no-store'});
+      const endpoint = ['localhost','127.0.0.1'].includes(location.hostname) ? '/api/content' : 'https://api.stream.dev.br/ultraleve/api/content';
+      const response = await fetch(endpoint, {cache:'no-store'});
       if (!response.ok) throw Error('API indisponível');
       data = BandModel.validate(await response.json());
     } catch {

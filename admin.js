@@ -6,7 +6,7 @@ function editing(form,item) {form.reset();Object.entries(item).forEach(([key,val
 async function save(next) {
   if(saving)return false;
   saving=true;document.querySelectorAll('button').forEach(b=>b.disabled=true);status.textContent='Salvando…';
-  try { const r=await fetch('/api/content',{method:'PUT',headers:{'Content-Type':'application/json','If-Match':etag},body:JSON.stringify(BandModel.validate(next))});const result=await r.json();if(!r.ok)throw Error(result.error || 'Falha ao salvar.');content=result;etag=r.headers.get('ETag');render();status.textContent='Salvo. As alterações já estão disponíveis no site.';return true; }
+  try { const r=await fetch(new URL('api/content',document.baseURI),{method:'PUT',headers:{'Content-Type':'application/json','If-Match':etag},body:JSON.stringify(BandModel.validate(next))});const result=await r.json();if(!r.ok)throw Error(result.error || 'Falha ao salvar.');content=result;etag=r.headers.get('ETag');render();status.textContent='Salvo. Atualize a página pública para ver as alterações.';return true; }
   catch(e){status.textContent=e.message;return false;}finally{saving=false;document.querySelectorAll('button').forEach(b=>b.disabled=false);}
 }
 function render() {
@@ -37,4 +37,4 @@ document.getElementById('show-form').addEventListener('submit',async e=>{
 });
 document.querySelectorAll('[data-reset]').forEach(b=>b.addEventListener('click',()=>document.getElementById(b.dataset.reset).reset()));
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));document.getElementById('music').hidden=b.dataset.tab!=='music';document.getElementById('shows').hidden=b.dataset.tab!=='shows';}));
-(async()=>{try{const r=await fetch('/api/content',{cache:'no-store'});if(!r.ok)throw Error();content=BandModel.validate(await r.json());etag=r.headers.get('ETag');render();status.textContent='';}catch{status.textContent='Abra o painel pelo servidor local. Não foi possível carregar o conteúdo.';document.querySelectorAll('button').forEach(b=>b.disabled=true);}})();
+(async()=>{try{const r=await fetch(new URL('api/content',document.baseURI),{cache:'no-store'});if(!r.ok)throw Error();content=BandModel.validate(await r.json());etag=r.headers.get('ETag');render();status.textContent='';}catch{status.textContent='Não foi possível carregar o conteúdo. Confira sua conexão e seu acesso.';document.querySelectorAll('button').forEach(b=>b.disabled=true);}})();
