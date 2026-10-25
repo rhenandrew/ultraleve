@@ -6,7 +6,7 @@ test('painel remoto exige convite e troca de senha antes de editar',async()=>{
   const port=await new Promise(resolve=>{const s=net.createServer();s.listen(0,'127.0.0.1',()=>{const p=s.address().port;s.close(()=>resolve(p));});});
   const root=path.resolve(__dirname,'..'),dir=fs.mkdtempSync(path.join(os.tmpdir(),'ultra-auth-test-'));
   const base='http://127.0.0.1:'+port;
-  const child=spawn(process.execPath,[path.join(root,'remote-server.cjs')],{env:{...process.env,PORT:String(port),ULTRA_DATA_DIR:dir,ULTRA_ORIGIN:base,ULTRA_SECURE_COOKIE:'0'},stdio:'ignore'});
+  const child=spawn(process.execPath,[path.join(root,'remote-server.cjs')],{env:{...process.env,PORT:String(port),ULTRA_DATA_DIR:dir,ULTRA_ORIGIN:base,ULTRA_PANEL_ORIGIN:'https://painel.bandaultraleve.com.br',ULTRA_SECURE_COOKIE:'0'},stdio:'ignore'});
   const cookies=r=>r.headers.getSetCookie().map(s=>s.split(';')[0]).join('; ');
   const post=(url,data,cookie='',method='POST',extra={})=>fetch(base+url,{method,headers:{Origin:base,'Content-Type':'application/json',Cookie:cookie,...extra},body:JSON.stringify(data),redirect:'manual'});
   try{
@@ -28,6 +28,8 @@ test('painel remoto exige convite e troca de senha antes de editar',async()=>{
     assert.deepEqual((await (await fetch(base+'/api/content')).json()).music,reordered.music);
     assert.equal((await post('/api/content',data,active,'PUT',{'If-Match':tag})).status,409);
     assert.equal((await post('/api/content',data,active,'PUT',{'If-Match':'W/'+firstSave.headers.get('ETag')})).status,200);
+    const panelLogin=await post('/api/session',{user:'admin',password:'SenhaDeTesteSomente123!'},'','POST',{Origin:'https://painel.bandaultraleve.com.br'});
+    assert.equal(panelLogin.status,200);
     assert.equal((await fetch(base+'/ativar?token='+state.token,{redirect:'manual'})).status,403);
     assert.equal((await fetch(base+'/account.json')).status,404);
     const saved=JSON.parse(fs.readFileSync(path.join(dir,'account.json'),'utf8'));assert.equal(saved.setup,false);assert.equal(saved.token,undefined);

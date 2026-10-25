@@ -8,6 +8,7 @@ if(!dir)throw Error('ULTRA_DATA_DIR obrigatorio');
 fs.mkdirSync(dir,{recursive:true,mode:0o700});
 const stateFile=path.join(dir,'account.json'),contentFile=path.join(dir,'content.json');
 const origin=process.env.ULTRA_ORIGIN||'https://api.stream.dev.br';
+const allowedOrigins=new Set([origin,process.env.ULTRA_PANEL_ORIGIN].filter(Boolean));
 const prefix='/ultraleve';
 const hash=(password,salt)=>crypto.scryptSync(password,salt,64).toString('hex');
 function atomic(file,data){const temp=file+'.tmp';fs.writeFileSync(temp,JSON.stringify(data,null,2)+'\n',{mode:0o600});fs.renameSync(temp,file);}
@@ -37,7 +38,7 @@ const server=http.createServer(async(req,res)=>{
     cookies(res,['ultra_setup='+account.token+'; Max-Age=1800']);res.writeHead(303,{Location:prefix+'/login'}).end();return;
   }
   if(['POST','PUT','DELETE'].includes(req.method)){
-    if(req.headers.origin!==origin||!req.headers['content-type']?.startsWith('application/json')){send(res,403,{error:'Origem nao autorizada.'});return;}
+    if(!allowedOrigins.has(req.headers.origin)||!req.headers['content-type']?.startsWith('application/json')){send(res,403,{error:'Origem nao autorizada.'});return;}
   }
   if(name==='/api/session'&&req.method==='GET'){send(res,200,{authenticated:!!s,mustChange:!!s?.mustChange});return;}
   if(name==='/api/session'&&req.method==='POST'){
